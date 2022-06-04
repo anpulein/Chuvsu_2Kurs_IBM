@@ -26,7 +26,7 @@ _Semestr_: 4-5
 
 | Name    | Icons                                           | Information                |
 |---------|-------------------------------------------------|----------------------------|
-| DOSbox  | ![DOSbox](../main/title_page/dos.png)           | `Markup language`          |
+| DOSbox  | ![DOSbox](../main/title_page/dos.png)           | `IDE`                      |
 
 
 [(Back to top)](#table-of-contents)

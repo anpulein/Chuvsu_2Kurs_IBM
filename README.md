@@ -24,9 +24,9 @@ _Semestr_: 4-5
 
 ### 🤖 Software used (semestr 4)
 
-| Name    | Icons                                           | Information                |
-|---------|-------------------------------------------------|----------------------------|
-| DOSbox  | ![DOSbox](../main/title_page/dos.png)           | `IDE`                      |
+| Name    | Icons                                             | Information                |
+|---------|---------------------------------------------------|----------------------------|
+| DOSbox  | <img src="../main/title_page/dos.png" height='64'>| `IDE`                      |
 
 
 [(Back to top)](#table-of-contents)

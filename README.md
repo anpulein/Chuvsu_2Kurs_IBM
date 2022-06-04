@@ -24,12 +24,10 @@ _Semestr_: 4-5
 
 ### 🤖 Software used (semestr 4)
 
-| Name  | Icons                                           | Information              |
-|-------|-------------------------------------------------|--------------------------|
-| HTML  | ![HTML](../main/title_page/html.png)            | `Markup language`        |
-| CSS   | ![CSS](../main/title_page/css.png)              | `Style sheet language`   |
-| JS    | ![JS](../main/title_page/js.png)                | `Programming language`   |
-| CLion | <img src="title_page/webStorm.png" height='64'> | `IDE`                    |
+| Name    | Icons                                           | Information                |
+|---------|-------------------------------------------------|----------------------------|
+| DOSbox  | ![DOSbox](../main/title_page/dos.png)           | `Markup language`          |
+
 
 [(Back to top)](#table-of-contents)
 

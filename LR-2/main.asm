@@ -1,0 +1,31 @@
+code	segment
+		assume	cs:code,ds:code
+		extrn	stringup:far	; описание внешней far-процедуры
+Example:mov		ax,cs			; настройка сегмента данных
+		mov		ds,ax			; на сегмент кода
+		; подготовка параметров вызова Change(S)
+		push	ds
+		mov		ax,offset Res
+		push	ax				; смещение Res
+		push	ds				; сегмент исходной строки S
+		mov		ax,offset S
+		push	ax
+		call	stringup		; far-вызов Change
+		; Чтение адреса результата функции Change из стека
+		pop		bx				; bx:=смещение Res
+		pop		ds				; ds:=сегмент  Res
+		mov		ch,0			; подготовка в cx длины строки Res
+		mov		cl,[bx]
+		jcxz	Exit			; выход, если строка Res пустая
+		; Вывод результата
+Write:	inc		bx				; продвижение указателя символа
+		mov		dl,[bx]			; dl:=очередной символ Res
+		mov		ah,2			; вывод символа из dl на экран
+		int		21h				; средствами DOS
+		loop	Write			; цикл по длине строки Res
+Exit:	mov		ax,4c00h		; завершение программы
+		int		21h				; через функцию DOS
+S		db	9,	'a1c . Bf,'
+Res		dw	128 dup(?)
+code	ends
+		end	Example

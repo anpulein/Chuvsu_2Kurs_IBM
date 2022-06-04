@@ -1,0 +1,131 @@
+Turbo Assembler	 Version 4.1	    05/05/22 18:11:07	    Page 1
+code.asm
+
+
+
+      1				     ;	Макрокоманда поиска в массиве	arr элемента,
+      2				     ; равного содержимому ячейки Х, и замены его		    +
+      3				     содержимым
+      4				     ; ячейки Y. Число элементов списка задается первым	    +
+      5				     элементом
+      6
+      7	0000			     data segment
+      8	0000  06 01 FA 03 F8 03	09	     mas db 6,1,-6,3,-8,3,9
+      9	0007  05			     a db 5
+     10	0008			     data ends
+     11
+     12
+     13				     change macro arr, X
+     14					     local m1, next, exit; метки внутри макрокоманды		    +
+     15				     объявляют	локальными
+     16					     push si cx	ax; сохранить в стеке используемые		    +
+     17				     регистры
+     18					     mov si, arr; начальный адрес	массива
+     19					     mov al,X  ; В al записываем заменяемый символ
+     20					     mov cx,0
+     21					     mov cl, [si]; длина массива
+     22					     jcxz exit
+     23
+     24					     m1: inc si
+     25						     cmp al, [si]
+     26						     je	exit
+     27						     cmp [si], cl
+     28						     je	next
+     29						     mov [si], ah
+     30
+     31						     next: mov [si+1],al ; Переход к следующему символу
+     32
+     33					     loop m1; dec cx, if cx <> 0, go to	m1
+     34
+     35				     exit:
+     36				     pop ax cx si
+     37
+     38				     endm
+     39	0000			     code segment
+     40
+     41
+     42				     assume cs:code, ds:data
+     43	0000			     start:
+     44	0000  B8 0000s			     mov ax,data;
+     45	0003  8E D8			     mov ds,ax;
+     46	0005  B8 0000r			     mov ax, offset mas
+     47					     change ax,	a
+1    48	0008  56 51 50			     push si cx	ax; сохранить в стеке используемые		    +
+     49				     регистры
+1    50	000B  8B F0			     mov si, ax; начальный адрес массива
+1    51	000D  A0 0007r			     mov al,a  ; В al записываем заменяемый символ
+1    52	0010  B9 0000			     mov cx,0
+1    53	0013  8A 0C			     mov cl, [si]; длина массива
+1    54	0015  E3 10			     jcxz ??0002
+1    55	0017  46			     ??0000: inc si
+1    56	0018  3A 04				     cmp al, [si]
+1    57	001A  74 0B				     je	??0002
+Turbo Assembler	 Version 4.1	    05/05/22 18:11:07	    Page 2
+code.asm
+
+
+
+1    58	001C  38 0C				     cmp [si], cl
+1    59	001E  74 02				     je	??0001
+1    60	0020  88 24				     mov [si], ah
+1    61	0022  88 44 01				     ??0001: mov [si+1],al ; Переход к следующему символу
+1    62	0025  E2 F0			     loop ??0000; dec cx, if cx	<> 0, go to ??0000
+1    63	0027			     ??0002:
+1    64	0027  58 59 5E		     pop ax cx si
+     65					     change ax,	4
+1    66	002A  56 51 50			     push si cx	ax; сохранить в стеке используемые		    +
+     67				     регистры
+1    68	002D  8B F0			     mov si, ax; начальный адрес массива
+1    69	002F  B0 04			     mov al,4  ; В al записываем заменяемый символ
+1    70	0031  B9 0000			     mov cx,0
+1    71	0034  8A 0C			     mov cl, [si]; длина массива
+1    72	0036  E3 10			     jcxz ??0005
+1    73	0038  46			     ??0003: inc si
+1    74	0039  3A 04				     cmp al, [si]
+1    75	003B  74 0B				     je	??0005
+1    76	003D  38 0C				     cmp [si], cl
+1    77	003F  74 02				     je	??0004
+1    78	0041  88 24				     mov [si], ah
+1    79	0043  88 44 01				     ??0004: mov [si+1],al ; Переход к следующему символу
+1    80	0046  E2 F0			     loop ??0003; dec cx, if cx	<> 0, go to ??0003
+1    81	0048			     ??0005:
+1    82	0048  58 59 5E		     pop ax cx si
+     83	004B  B4 4C			     mov ah,4ch
+     84	004D  CD 21			     int 21h
+     85	004F				     code ends
+     86				     end start
+Turbo Assembler	 Version 4.1	    05/05/22 18:11:07	    Page 3
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??0000				  Near	 CODE:0017
+??0001				  Near	 CODE:0022
+??0002				  Near	 CODE:0027
+??0003				  Near	 CODE:0038
+??0004				  Near	 CODE:0043
+??0005				  Near	 CODE:0048
+??DATE				  Text	 "05/05/22"
+??FILENAME			  Text	 "code	  "
+??TIME				  Text	 "18:11:07"
+??VERSION			  Number 040A
+@CPU				  Text	 0101H
+@CURSEG				  Text	 CODE
+@FILENAME			  Text	 CODE
+@WORDSIZE			  Text	 2
+A				  Byte	 DATA:0007
+MAS				  Byte	 DATA:0000
+START				  Near	 CODE:0000
+
+Macro Name
+
+CHANGE
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+CODE				  16  004F Para	  none
+DATA				  16  0008 Para	  none
+

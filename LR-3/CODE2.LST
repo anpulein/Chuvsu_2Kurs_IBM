@@ -1,0 +1,87 @@
+Turbo Assembler	 Version 4.1	    05/20/22 12:02:17	    Page 1
+code2.asm
+
+
+
+      1					 ;ВЫЧИСЛЕНИЕ ЭКСПОНЕНТЫ С ПОМОЩЬЮ РАЗЛОЖЕНИЯ В РЯД
+      2					 ; Вычислить функцию y = ln(1+x) при	|x|<1 двумя способами:
+      3					 ; б) путем разложения функции в ряд	y = x-(x^3/3) +	(x^5/5)-...
+      4					 ; Алгоритм вычисления
+      5					 ; 1. znam=1; chisl=x; S=x
+      6					 ; 2. znam=znam+1; chisl=chisl *(-x); chisl/znam; S=S+chisl/znam
+      7					 ; 3. Если ABS(chisl/znam)>eps идти к 2, иначе - закончить	    +
+      8					 распределение регистров
+      9					 ; ST(0) - рабочий, ST(1) - S, ST(2) - chisl,
+     10					 ; ST(3) - znam, ST(4) - -x, ST(5) - 1,	ST(6) -	eps
+     11
+     12
+     13	    0000			 Cseg segment
+     14					  assume cs:Cseg,ds:Cseg
+     15	    0000  3FC9999999999999	 x dq 0.2 ; аргумент функции
+     16	    0008  ????????????????	 sum dq	? ; результат вычисления функции
+     17	    0010  3EE4F8B588E368F0	 eps dq	1.0E-05; точность вычисления
+     18
+     19	    0018  8C C8			 start:	mov ax,cs ; настроить сегментные
+     20	    001A  8E D8			  mov ds,ax ; регистры
+     21	    001C  9B DB	E3		  finit	; инициализировать сопроцессор
+     22					  .386
+     23					  ; реализация первого	шага алгоритмов
+     24	    001F  DD 06	0010r		  fld eps ; загрузка точности eps
+     25	    0023  D9 E8			  fld1 ; загрузка 1
+     26	    0025  DD 06	0000r		  fld x	; загрузить x
+     27	    0029  D9 E0			  fchs
+     28	    002B  D9 E8			  fld1 ; загрузка 1
+     29	    002D  DD 06	0000r		  fld x	; загрузка 1
+     30	    0031  DD 06	0000r		  fld x	; загрузка x
+     31	    0035  D9 E8			  fld1 ; загрузка 1
+     32					  ; шаг 2
+     33	    0037			  calc:
+     34	    0037  D9 CB				 fxch st(3) ; обмен значений st(0)	<-> st(3) - znam
+     35	    0039  D8 C5				 fadd st(0),st(5)
+     36	    003B  DD D3				 fst st(3)
+     37	    003D  D9 CA				 fxch st(2) ; обмен значений st(0)	<-> st(2) - chisl
+     38	    003F  D8 CC				 fmul st(0),st(4) ; chisl * x
+     39	    0041  DD D2				 fst st(2)
+     40	    0043  D8 F3				 fdiv st(0),st(3) ; Delta/znam
+     41	    0045  DC C1				 fadd st(1),st(0)
+     42	    0047  D9 E1				 fabs ;	ABS(Delta)
+     43					 ;	 fcomi st,st(6)	; ABS(Delta) > eps
+     44						 ;db 0dbh,0f6h ; машинный код команды
+     45	    0049  D8 D6				 fcom st(6)
+     46	    004B  9B DF	E0			 fstsw ax
+     47	    004E  9E				 sahf
+     48	    004F  77 E6				 ja calc
+     49	    0051  DD D8				 fstp st;
+     50	    0053  DD 1E	0008r			 fstp sum ; запоминание результата
+     51	    0057  9B DB	E3			 finit
+     52
+     53	    005A  B8 4C00		  mov ax,4c00h ; вернуться в DOS
+     54	    005D  CD 21			  int 21h
+     55	    005F			 Cseg ends
+     56					  end start
+Turbo Assembler	 Version 4.1	    05/20/22 12:02:17	    Page 2
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "05/20/22"
+??FILENAME			  Text	 "code2	  "
+??TIME				  Text	 "12:02:17"
+??VERSION			  Number 040A
+@CPU				  Text	 0F0FH
+@CURSEG				  Text	 CSEG
+@FILENAME			  Text	 CODE2
+@WORDSIZE			  Text	 4
+CALC				  Near	 CSEG:0037
+EPS				  Qword	 CSEG:0010
+START				  Near	 CSEG:0018
+SUM				  Qword	 CSEG:0008
+X				  Qword	 CSEG:0000
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+CSEG				  16  005F Para	  none
+

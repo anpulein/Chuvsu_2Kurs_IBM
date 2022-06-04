@@ -1,0 +1,68 @@
+Turbo Assembler	 Version 4.1	    05/20/22 09:25:26	    Page 1
+test.asm
+
+
+
+      1	0000			     Cseg segment
+      2				      assume cs:Cseg,ds:Cseg
+      3	0000  3FF0000000000000	     x dq 1.0 ;	аргумент функции
+      4	0008  ????????????????	     sum dq ? ;	результат вычисления	функции
+      5	0010  3EE4F8B588E368F0	     eps dq 1.0E-05; точность вычисления
+      6				      ;
+      7	0018  8C C8		     start: mov	ax,cs ;	настройка сегмента данных на cs
+      8	001A  8E D8		      mov ds,ax
+      9	001C  9B DB E3		      finit ; инициализация сопроцессора
+     10				     ; реализация первого шага алгоритма
+     11	001F  9B DD 06 0010r	      Fld eps
+     12	0024  9B D9 E8		      fld1
+     13	0027  9B DD 06 0000r	      fld x
+     14	002C  9B D9 EE		      fldz
+     15	002F  9B D9 E8		      fld1
+     16	0032  9B D9 E8		      fld1
+     17	0035  9B D9 E8		      fld1
+     18				     ; шаг 2
+     19	0038  9B D9 CB		     calc: fxch	st(3) ;
+     20	003B  9B D8 C5		      fadd st(0),st(5) ; n=n+1
+     21	003E  9B DD D3		      fst st(3)
+     22	0041  9B D8 FA		      fdivr st(0),st(2)	; Delta/n
+     23	0044  9B D8 CC		      fmul st(0),st(4) ; (Delta/n)*x
+     24	0047  9B DD D2		      fst st(2)
+     25	004A  9B DC C1		      fadd st(1),st(0) ; S=S+Delta
+     26				     ; шаг 3
+     27	004D  9B D9 E1		      fabs ;, ABS(Delta)
+     28				     ; fcomi st(6) ; ABS(Delta)>eps
+     29	0050  DB F6		      db 0dbh,0f6h; машинный код команды
+     30	0052  77 E4		      ja calc ;	переход к шагу 2
+     31	0054  9B DD D8		      fstp st
+     32	0057  9B DD 1E 0008r	      fstp sum ; запоминание	результата
+     33	005C  9B DB E3		      finit
+     34	005F  B8 4C00		      mov ax,4c00h ; выход	из программы
+     35	0062  CD 21		      int 21h
+     36	0064			     Cseg ends
+     37				      end start
+Turbo Assembler	 Version 4.1	    05/20/22 09:25:26	    Page 2
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "05/20/22"
+??FILENAME			  Text	 "test	  "
+??TIME				  Text	 "09:25:26"
+??VERSION			  Number 040A
+@CPU				  Text	 0101H
+@CURSEG				  Text	 CSEG
+@FILENAME			  Text	 TEST
+@WORDSIZE			  Text	 2
+CALC				  Near	 CSEG:0038
+EPS				  Qword	 CSEG:0010
+START				  Near	 CSEG:0018
+SUM				  Qword	 CSEG:0008
+X				  Qword	 CSEG:0000
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+CSEG				  16  0064 Para	  none
+

@@ -1,0 +1,52 @@
+Turbo Assembler	 Version 4.1	    05/20/22 12:06:14	    Page 1
+code1.asm
+
+
+
+      1				     ;ВЫЧИСЛЕНИЕ ЭКСПОНЕНТЫ	С ПОМОЩЬЮ ФУНКЦИЙ		    +
+      2				     СОПРОЦЕССОРА
+      3				     ; Вычислить функцию y = ln(1+x) при |x|<1 двумя способами:
+      4				     ; а) с использованием трансцендентных команд		    +
+      5				     соцпроцессора
+      6				     ; б) путем разложения функции в ряд y =	x-(x^3/3) + (x^5/5)-...
+      7
+      8	0000			     cseg segment
+      9				      assume cs:cseg,ds:cseg
+     10	0000  3E4CCCCD		     x dd 0.2 ;	аргумент функции
+     11	0004  ????????		     y dd ? ; результат вычисления функции
+     12	0008  8C C8		     beg: mov ax,cs ; настроить сегментные
+     13	000A  8E D8		      mov ds,ax	; регистры
+     14	000C  9B DB E3		      finit ; инициализировать
+     15				      ;	сопроцессор
+     16	000F  9B D9 ED		      fldln2 ; загрузить ln(2)
+     17	0012  9B D9 06 0000r	      fld x ; загрузить x
+     18	0017  9B D9 F9		      fyl2xp1 ;	вычислить ln(x+1)=ln(2)*log2(x+1)
+     19	001A  9B D9 1E 0004r	      fstp y ; сохранить результат
+     20	001F  B8 4C00		      mov ax,4c00h ; вернуться	в DOS
+     21	0022  CD 21		      int 21h
+     22	0024			     Cseg ends
+     23				      end beg
+Turbo Assembler	 Version 4.1	    05/20/22 12:06:14	    Page 2
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "05/20/22"
+??FILENAME			  Text	 "code1	  "
+??TIME				  Text	 "12:06:14"
+??VERSION			  Number 040A
+@CPU				  Text	 0101H
+@CURSEG				  Text	 CSEG
+@FILENAME			  Text	 CODE1
+@WORDSIZE			  Text	 2
+BEG				  Near	 CSEG:0008
+X				  Dword	 CSEG:0000
+Y				  Dword	 CSEG:0004
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+CSEG				  16  0024 Para	  none
+

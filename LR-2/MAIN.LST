@@ -1,0 +1,72 @@
+Turbo Assembler	 Version 4.1	    05/06/22 12:23:10	    Page 1
+main.asm
+
+
+
+      1	0000			     code    segment
+      2						     assume  cs:code,ds:code
+      3						     extrn   stringup:far    ; описание	внешней far-процедуры
+      4	0000  8C C8		     Example:mov	     ax,cs		     ; настройка сегмента	    +
+      5				     данных
+      6	0002  8E D8				     mov	     ds,ax		     ; на сегмент кода
+      7						     ; подготовка параметров вызова Change(S)
+      8	0004  1E				     push    ds
+      9	0005  B8 0032r				     mov	     ax,offset Res
+     10	0008  50				     push    ax				     ; смещение	Res
+     11	0009  1E				     push    ds				     ; сегмент исходной	    +
+     12				     строки S
+     13	000A  B8 0028r				     mov	     ax,offset S
+     14	000D  50				     push    ax
+     15	000E  0E E8 0000e			     call    stringup		     ; far-вызов Change
+     16						     ; Чтение адреса результата функции Change из    +
+     17				     стека
+     18	0012  5B				     pop	     bx				     ; bx:=смещение Res
+     19	0013  1F				     pop	     ds				     ; ds:=сегмент  Res
+     20	0014  B5 00				     mov	     ch,0		     ; подготовка в cx длины+
+     21				     строки Res
+     22	0016  8A 0F				     mov	     cl,[bx]
+     23	0018  E3 09				     jcxz    Exit		     ; выход, если строка Res	    +
+     24				     пустая
+     25						     ; Вывод результата
+     26	001A  43		     Write:  inc	     bx				     ; продвижение		    +
+     27				     указателя	символа
+     28	001B  8A 17				     mov	     dl,[bx]		     ; dl:=очередной символ  +
+     29				     Res
+     30	001D  B4 02				     mov	     ah,2		     ; вывод символа из dl    +
+     31				     на экран
+     32	001F  CD 21				     int	     21h			     ; средствами DOS
+     33	0021  E2 F7				     loop    Write		     ; цикл	по длине	строки Res
+     34	0023  B8 4C00		     Exit:   mov	     ax,4c00h		     ; завершение программы
+     35	0026  CD 21				     int	     21h			     ; через функцию DOS
+     36	0028  09 61 31 63 20 2E	20+  S		     db	     9,	     'a1c . Bf,'
+     37	      42 66 2C
+     38	0032  80*(????)		     Res	     dw	     128 dup(?)
+     39	0132			     code    ends
+     40						     end     Example
+Turbo Assembler	 Version 4.1	    05/06/22 12:23:10	    Page 2
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "05/06/22"
+??FILENAME			  Text	 "main	  "
+??TIME				  Text	 "12:23:10"
+??VERSION			  Number 040A
+@CPU				  Text	 0101H
+@CURSEG				  Text	 CODE
+@FILENAME			  Text	 MAIN
+@WORDSIZE			  Text	 2
+EXAMPLE				  Near	 CODE:0000
+EXIT				  Near	 CODE:0023
+RES				  Word	 CODE:0032
+S				  Byte	 CODE:0028
+STRINGUP			  Far	 CODE:---- Extern
+WRITE				  Near	 CODE:001A
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+CODE				  16  0132 Para	  none
+

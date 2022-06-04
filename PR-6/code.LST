@@ -1,0 +1,67 @@
+Turbo Assembler	 Version 5.0	    05-05-22 10:27:16	    Page 1
+code.asm
+
+
+
+      1					 ;Внешние процедуры
+      2					 includelib import32.lib
+      3					  extrn	MessageBoxA:proc
+      4					  extrn	ExitProcess:proc
+      5					 .386 ;включение 32-битного режима
+      6	00000000			 .model	FLAT,STDCALL ;модель памяти	FLAT,
+      7					 ;прямая передача	параметров
+      8	00000000			 .data
+      9	00000000  48 65	6C 6C 6F 2C 20+	 mb_text db 'Hello, World!',0 ;Текстовные константы
+     10		  57 6F	72 6C 64 21 00
+     11	0000000E  4E 65	78 74 20 70 72+	 mb_title db 'Next program',0 ;для выполнения программы
+     12		  6F 67	72 61 6D 00
+     13	0000001B			 .code
+     14	00000000			 start:
+     15					  call MessageBoxA,0,offset mb_text, offset mb_title,0
+1    16	00000000  6A 00				 PUSH	 0
+1    17	00000002  68 0000000Er			 PUSH	 offset	mb_title
+1    18	00000007  68 00000000r			 PUSH	 offset	mb_text
+1    19	0000000C  6A 00				 PUSH	 0
+1    20	0000000E  E8 00000000e			 CALL	 MessageBoxA
+     21					  call ExitProcess,0 ;завершение программы
+1    22	00000013  6A 00				 PUSH	 0
+1    23	00000015  E8 00000000e			 CALL	 ExitProcess
+     24	0000001A			  ends
+     25					  end start
+Turbo Assembler	 Version 5.0	    05-05-22 10:27:16	    Page 2
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??date				  Text	 "05-05-22"
+??filename			  Text	 "code	  "
+??time				  Text	 "10:27:16"
+??version			  Number 0500
+@32Bit				  Text	 1
+@CodeSize			  Text	 0
+@Cpu				  Text	 0F0FH
+@DataSize			  Text	 0
+@FileName			  Text	 code
+@Interface			  Text	 003h
+@Model				  Text	 1
+@WordSize			  Text	 4
+@code				  Text	 FLAT
+@curseg				  Text	 _TEXT
+@data				  Text	 FLAT
+@stack				  Text	 FLAT
+ExitProcess			  Near16 ----:---- Extern
+MessageBoxA			  Near16 ----:---- Extern
+mb_text				  Byte	 FLAT:0000
+mb_title			  Byte	 FLAT:000E
+start				  Near32 FLAT:0000
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+DGROUP				  Group
+  _DATA				  32  001B Dword  Public  DATA
+FLAT				  Group
+_TEXT				  32  001A Dword  Public  CODE
+

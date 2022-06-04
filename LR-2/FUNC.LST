@@ -1,0 +1,86 @@
+Turbo Assembler	 Version 4.1	    04/21/22 15:52:15	    Page 1
+func.asm
+
+
+
+      1	0000			     code    segment byte public
+      2						     assume cs:code, ds:code
+      3						     public stringup
+      4	0000			     stringup	     proc    far
+      5	      =	dword ptr [bp+6]     S		     equ	     dword ptr [bp+6]
+      6	      =	dword ptr [bp+10]    Res	     equ	     dword ptr [bp+10]
+      7	0000  55				     push    bp		     ; сохранение bp
+      8	0001  8B EC				     mov     bp,sp   ; настройка bp на вершину стека
+      9	0003  1E				     push    ds		     ; сохранение ds
+     10	0004  C4 7E 0A				     les	     di,Res  ; es:di:= адрес результата
+     11	0007  C4 76 06				     les	     si,S    ; ds:si:= адрес исходной строки
+     12	000A  FC				     cld			     ; очистка флага		    +
+     13				     направления (инкремент)
+     14	000B  AC				     lodsb		     ; al:=(ds:[si]), si:=si+1 (al - длина	S)
+     15	000C  AA				     stosb
+     16	000D  B5 00				     mov	     ch,0    ; подготовка cx в качестве	    +
+     17				     счётчика
+     18	000F  8A C8				     mov	     cl,al   ; количество символов строки S
+     19	0011  E3 25				     jcxz    Exit    ; выход, если S -	пустая строка (cx=0)
+     20	0013			     Repeat:
+     21	0013  AC				     lodsb		     ; В al скачиваем	байт из ds:si
+     22	0014  3C 41				     cmp	     al,65
+     23	0016  7C 2A				     jl		     Save
+     24	0018  3C 5A				     cmp	     al,90
+     25	001A  7E 26				     jle	     Save
+     26	001C  3C 61				     cmp	     al,97
+     27	001E  7C 22				     jl		     Save
+     28	0020  3C 7A				     cmp	     al,122
+     29	0022  7E 1C				     jle	     Change
+     30	0024  3C 80				     cmp	     al,128
+     31	0026  7C 1A				     jl		     Save
+     32	0028  3C 9F				     cmp	     al,159
+     33	002A  7E 16				     jle	     Save
+     34	002C  3C AF				     cmp	     al,175
+     35	002E  7E 10				     jle	     Change
+     36	0030  3C E0				     cmp	     al,224
+     37	0032  7C 0E				     jl		     Save
+     38	0034  3C EF				     cmp	     al,239
+     39	0036  7E 08				     jle	     Change
+     40	0038  1F		     Exit:   pop	     ds
+     41	0039  5D				     pop	     bp
+     42	003A  CA 0004				     ret	     4
+     43	003D  EB 08 90				     jmp	     Exitt
+     44
+     45	0040  2C 20		     Change: sub	     al,32
+     46	0042  AA		     Save:   stosb
+     47	0043  E2 CE				     loop    Repeat
+     48	0045  EB F1				     jmp	     Exit
+     49	0047			     Exitt:
+     50	0047			     stringup	     endp
+     51	0047			     code	     ends
+     52							     end
+Turbo Assembler	 Version 4.1	    04/21/22 15:52:15	    Page 2
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "04/21/22"
+??FILENAME			  Text	 "func	  "
+??TIME				  Text	 "15:52:15"
+??VERSION			  Number 040A
+@CPU				  Text	 0101H
+@CURSEG				  Text	 CODE
+@FILENAME			  Text	 FUNC
+@WORDSIZE			  Text	 2
+CHANGE				  Near	 CODE:0040
+EXIT				  Near	 CODE:0038
+EXITT				  Near	 CODE:0047
+REPEAT				  Near	 CODE:0013
+RES				  Text	 dword ptr [bp+10]
+S				  Text	 dword ptr [bp+6]
+SAVE				  Near	 CODE:0042
+STRINGUP			  Far	 CODE:0000
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+CODE				  16  0047 Byte	  Public
+

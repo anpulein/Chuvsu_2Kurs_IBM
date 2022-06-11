@@ -12,7 +12,8 @@ _Department_: Вычислительной техники
 _Group_: ИВТ-41-20  
 _Student_: Галкин Дмитрий  
 _Teacher_: Андреева Антонина Аркадьевна  
-_Semestr_: 4-5
+_Semestr_: 4-5  
+_Subject of study_: ЭВМ
 
 # Table of contents
 - [Title-page](#Title-page)

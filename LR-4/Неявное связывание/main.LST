@@ -1,0 +1,83 @@
+Turbo Assembler	 Version 5.0	    09-20-22 19:12:40	    Page 1
+main.asm
+
+
+
+      1					 ; неявное подключение StrUpCaseProc.dll
+      2					 includelib import32.lib
+      3					 includelib StrUpCaseProc.lib
+      4
+      5					 extrn MessageBoxA: near
+      6					 extrn ExitProcess: near
+      7					 extrn StrUpCase: near
+      8
+      9
+     10					 .386
+     11	00000000			 .model	flat, stdcall
+     12
+     13	00000000			 .data
+     14	00000000  07 61	42 63 44 65 66+		 S db 7,'aBcDefg', 0
+     15		  67 00
+     16						 ; Сообщения пользователю
+     17	00000009  53 6F	75 72 63 65 20+		 msg1 db 'Source string: ', 0
+     18		  73 74	72 69 6E 67 3A+
+     19		  20 00
+     20	00000019  4E 65	77 20 73 74 72+		 msg2 db 'New string: ', 0
+     21		  69 6E	67 3A 20 00
+     22	00000026  4C 61	62 5F 34 00		 msg3 db 'Lab_4', 0
+     23
+     24	0000002C			 .code
+     25	00000000			 start:	call StrUpCase,	offset S
+1    26	00000000  68 00000000r			 PUSH	 offset	S
+1    27	00000005  E8 00000000e			 CALL	 StrUpCase
+     28						 call MessageBoxA, 0, offset S + 1, offset msg3, 0040H + 0
+1    29	0000000A  6A 40				 PUSH	 0040H+0
+1    30	0000000C  68 00000026r			 PUSH	 offset	msg3
+1    31	00000011  68 00000001r			 PUSH	 offset	S+1
+1    32	00000016  6A 00				 PUSH	 0
+1    33	00000018  E8 00000000e			 CALL	 MessageBoxA
+     34						 call ExitProcess,0
+1    35	0000001D  6A 00				 PUSH	 0
+1    36	0000001F  E8 00000000e			 CALL	 ExitProcess
+     37	00000024				 ends
+     38						 end start
+Turbo Assembler	 Version 5.0	    09-20-22 19:12:40	    Page 2
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??date				  Text	 "09-20-22"
+??filename			  Text	 "main	  "
+??time				  Text	 "19:12:40"
+??version			  Number 0500
+@32Bit				  Text	 1
+@CodeSize			  Text	 0
+@Cpu				  Text	 0F0FH
+@DataSize			  Text	 0
+@FileName			  Text	 main
+@Interface			  Text	 003h
+@Model				  Text	 1
+@WordSize			  Text	 4
+@code				  Text	 FLAT
+@curseg				  Text	 _TEXT
+@data				  Text	 FLAT
+@stack				  Text	 FLAT
+ExitProcess			  Near16 ----:---- Extern
+MessageBoxA			  Near16 ----:---- Extern
+S				  Byte	 FLAT:0000
+StrUpCase			  Near16 ----:---- Extern
+msg1				  Byte	 FLAT:0009
+msg2				  Byte	 FLAT:0019
+msg3				  Byte	 FLAT:0026
+start				  Near32 FLAT:0000
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+DGROUP				  Group
+  _DATA				  32  002C Dword  Public  DATA
+FLAT				  Group
+_TEXT				  32  0024 Dword  Public  CODE
+

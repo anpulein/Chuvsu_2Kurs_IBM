@@ -3,19 +3,17 @@
 ; а) с использованием трансцендентных команд соцпроцессора
 ; б) путем разложения функции в ряд y = x-(x^3/3) + (x^5/5)-...
 
-cseg segment
- assume cs:cseg,ds:cseg
-x dd 0.2 ; аргумент функции
-y dd ? ; результат вычисления функции
-beg: mov ax,cs ; настроить сегментные
- mov ds,ax ; регистры
- finit ; инициализировать
- ; сопроцессор
- fldln2 ; загрузить ln(2)
- fld x ; загрузить x
- fyl2xp1 ; вычислить ln(x+1)=ln(2)*log2(x+1)
- fstp y ; сохранить результат
- mov ax,4c00h ; вернуться в DOS
- int 21h
-Cseg ends
- end beg
+data segment
+X dd 0.2
+data ends
+code segment
+assume cs: code, ds: data
+mov ax, data
+mov ds, ax
+SUB EBP, X;
+SUB [BX+4*3], EAX;
+SUB AL, [ESI*2];
+SUB EAX, [EBX+EDX*4];
+POP DS;
+code ends
+end 

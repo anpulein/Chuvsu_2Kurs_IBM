@@ -1,0 +1,139 @@
+Turbo Assembler	 Version 4.1	    10/05/22 13:01:31	    Page 1
+code.asm
+
+
+
+      1					 ; Даны два двоичных множества одинаковой длины,
+      2					 ; представленные	в виде битовых строк. Написать	    +
+      3					 процедуру,
+      4					 ; производящую в зависимости от значения регистра+
+      5					 CL следующие действия
+      6					 ; CL =	0 - Произведение
+      7					 ; CL =	1 - Объединение
+      8					 ; CL =	2 - разность первого и второго множества
+      9					 ; Адрес первого множества	- FS:DX
+     10					 ; Адрес второго множества	- GS:BX
+     11					 ; Длина -	AX
+     12					 ; Результат записывается на место первого		    +
+     13					 множества
+     14
+     15					 .386
+     16	    0000			 DATA segment para use16
+     17	    0000  0C				 multe_1 db 1100b    ; Множество 1 (DX)
+     18	    0001  06				 multe_2 db 0110b	 ; Множество 2	(BX)
+     19	    0002			 DATA ends
+     20
+     21	    0000			 CODE segment para use16
+     22						  assume CS:CODE, DS:DATA
+     23
+     24	    0000			 start:
+     25	    0000  B8 0000s			 mov ax, DATA	 ; Загружаем данные из	DATA
+     26	    0003  8E D8				 mov ds, ax
+     27	    0005  8E E0				 mov fs, ax
+     28	    0007  66| BA 00000000		 mov edx, 0
+     29	    000D  66| BB 00000000		 mov ebx, 0
+     30	    0013  BA 0000r			 mov dx, offset	multe_1	 ; Загружаем Множество 1
+     31	    0016  BB 0001r			 mov bx, offset	multe_2	 ; Загружаем Множество 2
+     32	    0019  B8 0000			 mov ax, 0
+     33	    001C  B0 0A				 mov al, 10
+     34	    001E  B1 00				 mov cl, 0
+     35
+     36	    0020  80 F9	00			 cmp cl, 0
+     37	    0023  74 13	90 90			 je multiplication
+     38	    0027  80 F9	01			 cmp cl, 1
+     39	    002A  74 2E	90 90			 je addition
+     40	    002E  80 F9	02			 cmp cl, 2
+     41	    0031  74 49	90 90			 je difference
+     42	    0035  EB 64	90			 jmp exit
+     43
+     44					 ;------------------------------------------------------------>	Умножение
+     45	    0038				 multiplication:
+     46	    0038  8B C8					 mov cx, ax
+     47	    003A  BE 0000				 mov si, 0
+     48	    003D					 start1:
+     49	    003D  64: 67| 0F A3	32				 bt fs:[edx], si	 ; Проверка бита
+     50	    0042  73 10	90 90					 jnc loop1	 ; cf =	0
+     51	    0046  65: 67| 0F A3	33				 bt gs:[ebx], si	 ; Проверка бита
+     52	    004B  72 07	90 90					 jc loop1	 ; cf =	1
+     53	    004F  64: 67| 0F B3	32				 btr fs:[edx], si	 ; Проверка и сброс бита
+     54	    0054					 loop1:
+     55	    0054  46						 inc si
+     56	    0055  E2 E6						 loop start1
+     57	    0057  EB 42	90					 jmp exit
+Turbo Assembler	 Version 4.1	    10/05/22 13:01:31	    Page 2
+code.asm
+
+
+
+     58					 ;-----------------------------------------------------------> Объединение
+     59	    005A				 addition:
+     60	    005A  8B C8					 mov cx, ax
+     61	    005C  BE 0000				 mov si, 0
+     62	    005F					 start2:
+     63	    005F  64: 67| 0F A3	32				 bt fs:[edx], si	 ; Проверка бита
+     64	    0064  72 10	90 90					 jc loop2	 ; cf =	1
+     65	    0068  65: 67| 0F A3	33				 bt gs:[ebx], si	 ; Проверка бита
+     66	    006D  73 07	90 90					 jnc loop2	 ; cf =	0
+     67	    0071  64: 67| 0F B3	32				 btr fs:[edx], si	 ; Проверка и сброс бита
+     68	    0076					 loop2:
+     69	    0076  46						 inc si
+     70	    0077  E2 E6						 loop start2
+     71	    0079  EB 20	90					 jmp exit
+     72					 ;---------------------------------------------------------> Разность
+     73	    007C				 difference:
+     74	    007C  8B C8					 mov cx, ax
+     75	    007E  BE 0000				 mov si, 0
+     76	    0081					 start3:
+     77	    0081  64: 67| 0F A3	32				 bt fs:[edx], si	 ; Проверка бита
+     78	    0086  73 10	90 90					 jnc loop3	 ; cf =	0
+     79	    008A  65: 67| 0F A3	33				 bt gs:[ebx], si	 ; Проверка бита
+     80	    008F  73 07	90 90					 jnc loop3	 ; cf =	1
+     81	    0093  64: 67| 0F B3	32				 btr fs:[edx], si	 ; Проверка и сброс бита
+     82	    0098					 loop3:
+     83	    0098  46						 inc si
+     84	    0099  E2 E6						 loop start3
+     85					 ;-----------------------------------------------------------> Выход из		    +
+     86					 процедуры
+     87	    009B				 exit:
+     88	    009B  B4 4C					 mov ah, 4ch
+     89	    009D  CD 21					 int 21h
+     90					 ;--------------------------------------------------------------------------
+     91
+     92
+     93	    009F			 CODE ends
+     94					 end start
+Turbo Assembler	 Version 4.1	    10/05/22 13:01:31	    Page 3
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "10/05/22"
+??FILENAME			  Text	 "code	  "
+??TIME				  Text	 "13:01:31"
+??VERSION			  Number 040A
+@CPU				  Text	 0F0FH
+@CURSEG				  Text	 CODE
+@FILENAME			  Text	 CODE
+@WORDSIZE			  Text	 2
+ADDITION			  Near	 CODE:005A
+DIFFERENCE			  Near	 CODE:007C
+EXIT				  Near	 CODE:009B
+LOOP1				  Near	 CODE:0054
+LOOP2				  Near	 CODE:0076
+LOOP3				  Near	 CODE:0098
+MULTE_1				  Byte	 DATA:0000
+MULTE_2				  Byte	 DATA:0001
+MULTIPLICATION			  Near	 CODE:0038
+START				  Near	 CODE:0000
+START1				  Near	 CODE:003D
+START2				  Near	 CODE:005F
+START3				  Near	 CODE:0081
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+CODE				  16  009F Para	  none
+DATA				  16  0002 Para	  none
+

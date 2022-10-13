@@ -1,0 +1,105 @@
+Turbo Assembler	 Version 5.0	    09-21-22 06:35:12	    Page 1
+main.asm
+
+
+
+      1					 ; явное подключение StrUpCaseProc.dll
+      2					 includelib import32.lib
+      3
+      4					 extrn MessageBoxA: near
+      5					 extrn ExitProcess: near
+      6					 extrn LoadLibraryA: near
+      7					 extrn GetProcAddress: near
+      8
+      9
+     10					 .386
+     11	00000000			 .model	flat, stdcall
+     12
+     13	00000000			 .data
+     14	00000000  05 61	42 63 44 65 00		 S db 5,'aBcDe', 0
+     15						 ; Подключение dll
+     16	00000007  53 74	72 55 70 43 61+		 librname db 'StrUpCaseProc.dll',0
+     17		  73 65	50 72 6F 63 2E+
+     18		  64 6C	6C 00
+     19	00000019  53 74	72 55 70 43 61+		 procname db 'StrUpCase',0
+     20		  73 65	00
+     21	00000023  ????????			 hlib dd ?
+     22	00000027  ????????			 StrUpCase dd ?
+     23						 ; Сообщения пользователю
+     24	0000002B  53 6F	75 72 63 65 20+		 msg1 db 'Source string: ', 0
+     25		  73 74	72 69 6E 67 3A+
+     26		  20 00
+     27	0000003B  4E 65	77 20 73 74 72+		 msg2 db 'New string: ', 0
+     28		  69 6E	67 3A 20 00
+     29	00000048  4C 61	62 5F 34 00		 msg3 db 'Lab_4', 0
+     30
+     31	0000004E			 .code
+     32	00000000			 start:
+     33						 call LoadLibraryA, offset librname
+1    34	00000000  68 00000007r			 PUSH	 offset	librname
+1    35	00000005  E8 00000000e			 CALL	 LoadLibraryA
+     36	0000000A  A3 00000023r			 mov hlib, eax
+     37						 call GetProcAddress, hlib, offset procname
+1    38	0000000F  68 00000019r			 PUSH	 offset	procname
+1    39	00000014  FF 35	00000023r		 PUSH	 hlib
+1    40	0000001A  E8 00000000e			 CALL	 GetProcAddress
+     41	0000001F  A3 00000027r			 mov StrUpCase,	offset eax
+     42						 call StrUpCase, offset	S
+1    43	00000024  68 00000000r			 PUSH	 offset	S
+1    44	00000029  FF 15	00000027r		 CALL	 StrUpCase
+     45						 call MessageBoxA, 0, offset S + 1, offset msg3, 0040H + 0
+1    46	0000002F  6A 40				 PUSH	 0040H+0
+1    47	00000031  68 00000048r			 PUSH	 offset	msg3
+1    48	00000036  68 00000001r			 PUSH	 offset	S+1
+1    49	0000003B  6A 00				 PUSH	 0
+1    50	0000003D  E8 00000000e			 CALL	 MessageBoxA
+     51						 call ExitProcess,0
+1    52	00000042  6A 00				 PUSH	 0
+1    53	00000044  E8 00000000e			 CALL	 ExitProcess
+     54	00000049				 ends
+     55						 end start
+Turbo Assembler	 Version 5.0	    09-21-22 06:35:12	    Page 2
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??date				  Text	 "09-21-22"
+??filename			  Text	 "main	  "
+??time				  Text	 "06:35:12"
+??version			  Number 0500
+@32Bit				  Text	 1
+@CodeSize			  Text	 0
+@Cpu				  Text	 0F0FH
+@DataSize			  Text	 0
+@FileName			  Text	 main
+@Interface			  Text	 003h
+@Model				  Text	 1
+@WordSize			  Text	 4
+@code				  Text	 FLAT
+@curseg				  Text	 _TEXT
+@data				  Text	 FLAT
+@stack				  Text	 FLAT
+ExitProcess			  Near16 ----:---- Extern
+GetProcAddress			  Near16 ----:---- Extern
+LoadLibraryA			  Near16 ----:---- Extern
+MessageBoxA			  Near16 ----:---- Extern
+S				  Byte	 FLAT:0000
+StrUpCase			  Dword	 FLAT:0027
+hlib				  Dword	 FLAT:0023
+librname			  Byte	 FLAT:0007
+msg1				  Byte	 FLAT:002B
+msg2				  Byte	 FLAT:003B
+msg3				  Byte	 FLAT:0048
+procname			  Byte	 FLAT:0019
+start				  Near32 FLAT:0000
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+DGROUP				  Group
+  _DATA				  32  004E Dword  Public  DATA
+FLAT				  Group
+_TEXT				  32  0049 Dword  Public  CODE
+

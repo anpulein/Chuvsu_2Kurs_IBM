@@ -1,0 +1,5 @@
+
+ Start         Length     Name                   Class
+ 0001:00000000 000000049H _TEXT                  CODE
+ 0002:00000000 00000004EH _DATA                  DATA
+ 0002:00000050 000000000H _BSS                   BSS

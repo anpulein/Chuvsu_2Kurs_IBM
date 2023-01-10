@@ -1,0 +1,25 @@
+     1                                  global _start
+     2                                  section .text
+     3                                  
+     4                                  _start:
+     5 00000000 58                              pop eax     ; pop argc
+     6 00000001 83F802                          cmp eax, 0x2; если нет аргументов командной строки
+     7 00000004 750E                            jne _exit   ; exit
+     8 00000006 58                              pop eax     ; 
+     9 00000007 5B                              pop ebx
+    10                                  
+    11                                          ; Открываем файла для изменения
+    12 00000008 B80F000000                      mov eax,15       ; Функция chmod
+    13                                          ;mov ebx,filename ; 1 аргумент - название файла
+    14 0000000D B958010000                      mov ecx,344      ; 2 аргумент - права доступа   
+    15 00000012 CD80                            int 0x80
+    16                                  
+    17                                  _exit:
+    18 00000014 B801000000                  mov eax, 1              ; sys_exit                                      
+    19 00000019 BB00000000                  mov ebx, 0
+    20 0000001E CD80                        int 0x80
+    21                                  
+    22                                  section .data
+    23                                      ;filename db 'test.txt', 0
+    24                                      ;lenfilename equ $ - filename
+    25                                      buf_size equ 2048

@@ -1,0 +1,18 @@
+
+code:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000401000 <_start>:
+  401000:	48 c7 c0 3c 00 00 00 	mov    rax,0x3c
+  401007:	48 c7 c1 00 00 00 00 	mov    rcx,0x0
+  40100e:	48 ba 00 20 40 00 00 	movabs rdx,0x402000
+  401015:	00 00 00 
+  401018:	0f 05                	syscall 
+  40101a:	72 01                	jb     40101d <fin>
+  40101c:	50                   	push   rax
+
+000000000040101d <fin>:
+  40101d:	48 c7 c0 00 4c 00 00 	mov    rax,0x4c00
+  401024:	0f 05                	syscall 

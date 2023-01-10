@@ -9,13 +9,15 @@
 ; Длина - AX
 ; Результат записывается на место первого множества 
 
+; Как ассемблер расстовляет префиксы 66 и  67 и как процессор их выполняет
+
 .386
-DATA segment para use16
+DATA segment para use32
 	multe_1 db 1100b    ; Множество 1 (DX)
 	multe_2 db 0110b 	; Множество 2 (BX)
 DATA ends
 
-CODE segment para use16
+CODE segment para use32
 	 assume CS:CODE, DS:DATA
 
 start: 
@@ -24,8 +26,8 @@ start:
 	mov fs, ax		
 	mov edx, 0
 	mov ebx, 0
-	mov dx, offset multe_1	; Загружаем Множество 1
-	mov bx, offset multe_2	; Загружаем Множество 2
+	mov dx, offset multe_1	; Загружаем Множество 1 ;; 
+	mov bx, offset multe_2	; Загружаем Множество 2 ;; 
 	mov ax, 0
 	mov al, 10
 	mov cl, 0

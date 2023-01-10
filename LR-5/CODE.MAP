@@ -1,9 +1,2 @@
-
- Start  Stop   Length Name               Class
-
- 00000H 00001H 00002H DATA               
- 00010H 000AEH 0009FH CODE               
-
-Program entry point at 0001:0000
-Warning: No stack
+Fatal: Unable to open file 'code.obj'
 
